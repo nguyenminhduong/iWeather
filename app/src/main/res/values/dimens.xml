@@ -5,4 +5,12 @@
     <dimen name="activity_height_progressbar">40dp</dimen>
     <dimen name="activity_width_progressbar">40dp</dimen>
     <dimen name="activity_splash_marginbottom">140dp</dimen>
+    <dimen name="text_city_name_size">30sp</dimen>
+    <dimen name="text_temp_current_padding_left">50dp</dimen>
+    <dimen name="text_temp_current_size">100sp</dimen>
+    <dimen name="image_margin_top">15dp</dimen>
+    <dimen name="text_summary_current_size">20sp</dimen>
+    <dimen name="text_unit">10sp</dimen>
+    <dimen name="layout_margin_top">10dp</dimen>
+    <dimen name="activity_padding_bottom">30px</dimen>
 </resources>

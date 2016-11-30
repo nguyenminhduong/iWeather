@@ -2,4 +2,9 @@
     <string name="app_name">IWeather</string>
     <string name="item_setting">Setting</string>
     <string name="item_more">More</string>
+    <string name="text_real_feel">RealFeel</string>
+    <string name="text_temp_unit">o</string>
+    <string name="text_humidity_unit">%</string>
+    <string name="text_temp_max_min">/</string>
+    <string name="text_wind_unit">m/s</string>
 </resources>
