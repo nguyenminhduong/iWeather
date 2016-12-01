@@ -2,6 +2,8 @@
     <string name="app_name">IWeather</string>
     <string name="item_setting">Setting</string>
     <string name="item_more">More</string>
+    <string name="text_slash">/</string>
+    <string name="text_temperature">o</string>
     <string name="text_real_feel">RealFeel</string>
     <string name="text_temp_unit">o</string>
     <string name="text_humidity_unit">%</string>

@@ -3,6 +3,8 @@ package com.example.framgia.iweather.data.model.forecast;
 import com.google.gson.annotations.SerializedName;
 
 public class DataOfWeatherDate {
+    @SerializedName("time")
+    private String mTime;
     @SerializedName("summary")
     private String mSummary;
     @SerializedName("icon")
@@ -15,6 +17,14 @@ public class DataOfWeatherDate {
     private Double mHumidity;
     @SerializedName("windSpeed")
     private Double mWindSpeed;
+
+    public String getTime() {
+        return mTime;
+    }
+
+    public void setTime(String time) {
+        mTime = time;
+    }
 
     public String getSummary() {
         return mSummary;

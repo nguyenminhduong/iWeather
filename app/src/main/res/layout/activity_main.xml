@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_city_name_size"
+            android:textSize="@dimen/text_unit"
             android:textStyle="bold"/>
     </android.support.v7.widget.Toolbar>
 
@@ -55,7 +55,7 @@
                 android:gravity="top"
                 android:text="@string/text_temp_unit"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_city_name_size"
+                android:textSize="@dimen/text_unit"
                 android:textStyle="bold"/>
 
             <ImageView
@@ -100,7 +100,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/text_temp_unit"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_unit"
+                android:textSize="@dimen/sp_10"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_humidity_unit"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_unit"/>
+                        android:textSize="@dimen/sp_10"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -168,7 +168,7 @@
                         android:layout_height="match_parent"
                         android:text="@string/text_temp_unit"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_unit"
+                        android:textSize="@dimen/sp_10"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -191,7 +191,7 @@
                         android:layout_height="match_parent"
                         android:text="@string/text_temp_unit"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_unit"
+                        android:textSize="@dimen/sp_10"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
@@ -212,7 +212,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_wind_unit"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_unit"/>
+                        android:textSize="@dimen/sp_10"/>
                 </LinearLayout>
 
             </TableRow>
