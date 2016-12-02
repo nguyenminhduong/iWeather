@@ -1,16 +1,16 @@
 package com.example.framgia.iweather.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 
 import com.example.framgia.iweather.R;
 
 /**
  * Created by chaupham on 11/24/2016.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
     private final int TIME_DELAY = 2000;
     private Handler mHandlerSplash;
 
