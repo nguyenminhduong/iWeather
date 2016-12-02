@@ -13,13 +13,13 @@
         android:background="@color/color_recycleview_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/recyclerview_padding">
+        android:padding="@dimen/dp_10">
 
         <TextView
             android:id="@+id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/recyclerview_margin_left"
+            android:layout_marginLeft="@dimen/dp_10"
             android:layout_weight="2"
             android:scaleType="centerCrop"
             android:textColor="@android:color/white"
@@ -35,8 +35,8 @@
                 android:id="@+id/image_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_imageview"
-                android:layout_marginRight="@dimen/margin_imageview"
+                android:layout_marginEnd="@dimen/dp_31"
+                android:layout_marginRight="@dimen/dp_31"
                 android:layout_weight="1"/>
 
             <TextView
