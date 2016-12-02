@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.framgia.iweather.R;
 import com.example.framgia.iweather.data.model.forecast.DataOfWeatherDate;
+import com.example.framgia.iweather.utils.Const;
 
 import java.util.List;
 
@@ -42,31 +43,31 @@ public class WeatherAdapter
 
     private void setWeatherIcon(ImageView imageView, String iconName) {
         switch (iconName) {
-            case Const.CLEAR_NIGHT:
+            case Const.IconWeather.CLEAR_NIGHT:
                 imageView.setImageResource(R.drawable.ic_clear_night);
                 break;
-            case Const.CLOUDY:
+            case Const.IconWeather.CLOUDY:
                 imageView.setImageResource(R.drawable.ic_cloudy);
                 break;
-            case Const.FOG:
+            case Const.IconWeather.FOG:
                 imageView.setImageResource(R.drawable.ic_fog);
                 break;
-            case Const.PARTLY_CLOUDY_DAY:
+            case Const.IconWeather.PARTLY_CLOUDY_DAY:
                 imageView.setImageResource(R.drawable.ic_partly_cloudy_day);
                 break;
-            case Const.PARTLY_CLOUDY_NIGHT:
+            case Const.IconWeather.PARTLY_CLOUDY_NIGHT:
                 imageView.setImageResource(R.drawable.ic_partly_cloudy_night);
                 break;
-            case Const.RAIN:
+            case Const.IconWeather.RAIN:
                 imageView.setImageResource(R.drawable.ic_rain);
                 break;
-            case Const.SNOW:
+            case Const.IconWeather.SNOW:
                 imageView.setImageResource(R.drawable.ic_snow);
                 break;
-            case Const.SLEET:
+            case Const.IconWeather.SLEET:
                 imageView.setImageResource(R.drawable.ic_sleet);
                 break;
-            case Const.WIND:
+            case Const.IconWeather.WIND:
                 imageView.setImageResource(R.drawable.ic_wind);
                 break;
             default:
