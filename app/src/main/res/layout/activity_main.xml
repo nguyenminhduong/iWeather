@@ -21,8 +21,8 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
                 android:src="@drawable/ic_place_white"/>
 
             <TextView
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_10"
+                android:textSize="@dimen/sp_25"
                 android:textStyle="bold"/>
         </android.support.v7.widget.Toolbar>
 
@@ -51,6 +51,7 @@
                     android:id="@+id/text_temp_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_50"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/sp_100"/>
 
@@ -99,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/sp_10"/>
+                    android:textSize="@dimen/sp_20"/>
 
                 <TextView
                     android:id="@+id/text_unit_real_feel"
