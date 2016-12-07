@@ -78,9 +78,9 @@ public class WeatherAdapter
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.text_date)
         TextView mDate;
-        @BindView(R.id.text_temperaturemin)
-        TextView mTemperatureMax;
         @BindView(R.id.text_temperaturemax)
+        TextView mTemperatureMax;
+        @BindView(R.id.text_temperaturemin)
         TextView mTemperatureMin;
         @BindView(R.id.image_weather)
         ImageView mImageView;

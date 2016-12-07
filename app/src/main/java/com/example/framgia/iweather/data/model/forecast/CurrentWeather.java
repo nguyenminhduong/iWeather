@@ -13,6 +13,8 @@ public class CurrentWeather {
     private Double mHumidity;
     @SerializedName("windSpeed")
     private Double mWindSpeed;
+    @SerializedName("apparentTemperature")
+    private Double mApparentTemperature;
 
     public String getSummary() {
         return mSummary;
@@ -52,5 +54,13 @@ public class CurrentWeather {
 
     public void setWindSpeed(Double windSpeed) {
         mWindSpeed = windSpeed;
+    }
+
+    public Double getApparentTemperature() {
+        return mApparentTemperature;
+    }
+
+    public void setApparentTemperature(Double apparentTemperature) {
+        mApparentTemperature = apparentTemperature;
     }
 }
