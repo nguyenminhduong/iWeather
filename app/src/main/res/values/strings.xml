@@ -13,4 +13,15 @@
     <string name="mess_toak_geocode_fail">Cannot load city!</string>
     <string name="key_short_name_city">administrative_area_level_1</string>
     <string name="loading_dialog_mess">Loading. Please wait...</string>
+    <string name="key_temp_unit">temp_unit</string>
+    <string name="key_wind_unit">wind_unit</string>
+    <string name="text_temperature_unit">Temperature unit</string>
+    <string name="summary_temperature">Set unit for temperature</string>
+    <string name="text_wind_speed_unit">Wind speed unit</string>
+    <string name="summary_wind_speed">Set unit for wind speed</string>
+    <string name="action_setting">SETTINGS</string>
+    <string name="alert_positive_button">Settings</string>
+    <string name="alert_negative_button">Cancel</string>
+    <string name="alert_title">GPS is settings</string>
+    <string name="alert_message">GPS is not enabled. Do you want to go to setting location?</string>
 </resources>

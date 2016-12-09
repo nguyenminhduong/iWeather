@@ -1,14 +1,24 @@
 package com.example.framgia.iweather.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +30,8 @@ import com.example.framgia.iweather.data.model.forecast.Weather;
 import com.example.framgia.iweather.data.model.geocode.AddressComponent;
 import com.example.framgia.iweather.data.model.geocode.GeoCode;
 import com.example.framgia.iweather.service.API;
-import com.example.framgia.iweather.ui.adapter.Const;
 import com.example.framgia.iweather.ui.adapter.WeatherAdapter;
+import com.example.framgia.iweather.utils.Const;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +43,12 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.framgia.iweather.service.ConvertUnit.convertWeather;
+import static com.example.framgia.iweather.service.LocationUtils.askPermissionsAndShowMyLocation;
+import static com.example.framgia.iweather.service.LocationUtils.getLocation;
+import static com.example.framgia.iweather.service.LocationUtils.isGPSEnabled;
+import static com.example.framgia.iweather.utils.Const.RequestCode.REQUEST_ACTION_SETTINGS;
 
 public class MainActivity extends AppCompatActivity
     implements SwipeRefreshLayout.OnRefreshListener {
@@ -67,11 +83,14 @@ public class MainActivity extends AppCompatActivity
     Toolbar mToolbarMain;
     @BindView(R.id.swipe_to_refresh)
     SwipeRefreshLayout mSwifeToRefresh;
-    private String mDemoLocation = "16.0470775,108.171214";
     private ProgressDialog mLoadingDialog;
     private WeatherAdapter mWeatherAdapter;
     private List<DataOfWeatherDate> mDateList = new ArrayList<>();
     private int mCountRequest;
+    private String mTempUnit;
+    private String mWindUnit;
+    private String mLocation;
+    private Weather mWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +107,19 @@ public class MainActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.item_setting) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivityForResult(intent, REQUEST_ACTION_SETTINGS);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
-        mLoadingDialog = ProgressDialog.show(this, "",
-            getString(R.string.loading_dialog_mess), true);
+        mLoadingDialog = new ProgressDialog(this);
+        mLoadingDialog.setMessage(getString(R.string.loading_dialog_mess));
+        getSetting();
         mToolbarMain.setTitle("");
         setSupportActionBar(mToolbarMain);
         mSwifeToRefresh.setOnRefreshListener(this);
@@ -113,8 +142,14 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<Weather> call, Response<Weather> response) {
                 if (getApplicationContext() == null) return;
                 checkCountRequest();
-                if (response == null) return;
-                setWeather(response.body());
+                if (response == null) {
+                    Toast.makeText(getApplicationContext(), R.string.mess_tosk_weather_fail,
+                        Toast.LENGTH_SHORT)
+                        .show();
+                    return;
+                }
+                mWeather = response.body();
+                setWeather(convertWeather(mWeather, mTempUnit, mWindUnit));
             }
 
             @Override
@@ -134,7 +169,12 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<GeoCode> call, Response<GeoCode> response) {
                 if (getApplicationContext() == null) return;
                 checkCountRequest();
-                if (response == null) return;
+                if (response == null) {
+                    Toast.makeText(getApplicationContext(), R.string.mess_tosk_weather_fail, Toast
+                        .LENGTH_SHORT)
+                        .show();
+                    return;
+                }
                 setCityName(response.body());
             }
 
@@ -175,9 +215,9 @@ public class MainActivity extends AppCompatActivity
         if (weather.getCurrently() == null) return;
         List<DataOfWeatherDate> listTemp = weather.getDate().getData();
         CurrentWeather currentWeather = weather.getCurrently();
-        mTextViewTempMaxCurrent.setText(Math.round(listTemp.get(0)
+        mTextViewTempMaxCurrent.setText(Math.round(listTemp.get(1)
             .getTemperatureMax()) + "");
-        mTextViewTempMinCurrent.setText(Math.round(listTemp.get(0)
+        mTextViewTempMinCurrent.setText(Math.round(listTemp.get(1)
             .getTemperatureMin()) + "");
         mTextViewTempCurrent.setText(Math.round(currentWeather.getTemperature()) + "");
         mTextViewSummaryCurrent.setText(currentWeather.getSummary());
@@ -188,6 +228,7 @@ public class MainActivity extends AppCompatActivity
         mTextViewTempRealFeel
             .setText(" " + Math.round(currentWeather.getApparentTemperature()));
         setWeatherIcon(mImageViewIconCurrent, currentWeather.getIcon());
+        mDateList.clear();
         for (DataOfWeatherDate date : listTemp) {
             long unixTime = Long.parseLong(date.getTime());
             Date dateFromUnixTime = new Date(DATE_CONVERT * unixTime);
@@ -200,31 +241,31 @@ public class MainActivity extends AppCompatActivity
 
     private void setWeatherIcon(ImageView imageView, String iconName) {
         switch (iconName) {
-            case Const.CLEAR_NIGHT:
+            case Const.IconWeather.CLEAR_NIGHT:
                 imageView.setImageResource(R.drawable.ic_clear_night);
                 break;
-            case Const.CLOUDY:
+            case Const.IconWeather.CLOUDY:
                 imageView.setImageResource(R.drawable.ic_cloudy);
                 break;
-            case Const.FOG:
+            case Const.IconWeather.FOG:
                 imageView.setImageResource(R.drawable.ic_fog);
                 break;
-            case Const.PARTLY_CLOUDY_DAY:
+            case Const.IconWeather.PARTLY_CLOUDY_DAY:
                 imageView.setImageResource(R.drawable.ic_partly_cloudy_day);
                 break;
-            case Const.PARTLY_CLOUDY_NIGHT:
+            case Const.IconWeather.PARTLY_CLOUDY_NIGHT:
                 imageView.setImageResource(R.drawable.ic_partly_cloudy_night);
                 break;
-            case Const.RAIN:
+            case Const.IconWeather.RAIN:
                 imageView.setImageResource(R.drawable.ic_rain);
                 break;
-            case Const.SNOW:
+            case Const.IconWeather.SNOW:
                 imageView.setImageResource(R.drawable.ic_snow);
                 break;
-            case Const.SLEET:
+            case Const.IconWeather.SLEET:
                 imageView.setImageResource(R.drawable.ic_sleet);
                 break;
-            case Const.WIND:
+            case Const.IconWeather.WIND:
                 imageView.setImageResource(R.drawable.ic_wind);
                 break;
             default:
@@ -234,9 +275,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getData() {
-        mCountRequest = 2;
-        getCityName(mDemoLocation);
-        getWeather(mDemoLocation);
+        if (isGPSEnabled(this)) {
+            if (askPermissionsAndShowMyLocation(this)) {
+                mLoadingDialog.show();
+                mCountRequest = 2;
+                mLocation = getLocation(this);
+                getCityName(mLocation);
+                getWeather(mLocation);
+            }
+        } else {
+            showSettingsAlert();
+        }
     }
 
     private void checkCountRequest() {
@@ -245,5 +294,75 @@ public class MainActivity extends AppCompatActivity
         if (mCountRequest == 0 && mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();
         }
+    }
+
+    private void getSetting() {
+        SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(this);
+        mTempUnit = pre.getString(Const.UnitTemp.PREF_TEMP_UNIT, Const.UnitTemp.FAHRENHEIT);
+        mWindUnit = pre.getString(Const.UnitWind.PREF_WIND_UNIT, Const.UnitWind.MILES_PER_HOURS);
+        switch (mWindUnit) {
+            case Const.UnitWind.KILOMETER_PER_HOUR:
+                mTextViewWindCurrentUnit.setText(Const.UnitWind.KILOMETER_PER_HOUR);
+                break;
+            case Const.UnitWind.MILES_PER_HOURS:
+                mTextViewWindCurrentUnit.setText(Const.UnitWind.MILES_PER_HOURS);
+                break;
+            case Const.UnitWind.METER_PER_SECOND:
+                mTextViewWindCurrentUnit.setText(Const.UnitWind.METER_PER_SECOND);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Const.RequestCode.REQUEST_ID_ACCESS_COURSE_FINE_LOCATION:
+                if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getData();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case Const.RequestCode.REQUEST_ACTION_LOCATION_SOURCE_SETTINGS:
+                    getData();
+                    break;
+                case REQUEST_ACTION_SETTINGS:
+                    getSetting();
+                    setWeather(convertWeather(mWeather, mTempUnit, mWindUnit));
+                    break;
+            }
+        }
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog
+            .setTitle(R.string.alert_title)
+            .setMessage(R.string.alert_message)
+            .setPositiveButton(R.string.alert_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Settings
+                                .ACTION_LOCATION_SOURCE_SETTINGS),
+                            Const.RequestCode.REQUEST_ACTION_LOCATION_SOURCE_SETTINGS);
+                    }
+                })
+            .setNegativeButton(R.string.alert_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+            .show();
     }
 }

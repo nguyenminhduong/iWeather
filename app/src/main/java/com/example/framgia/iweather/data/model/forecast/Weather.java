@@ -1,5 +1,6 @@
 package com.example.framgia.iweather.data.model.forecast;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class Weather {
@@ -7,6 +8,12 @@ public class Weather {
     private CurrentWeather mCurrent;
     @SerializedName("daily")
     private WeatherDate mDate;
+
+    public static Weather copyWeather(Weather weather) {
+        Gson gson = new Gson();
+        String jsonObject = gson.toJson(weather);
+        return gson.fromJson(jsonObject, Weather.class);
+    }
 
     public CurrentWeather getCurrently() {
         return mCurrent;
